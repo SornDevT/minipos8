@@ -1,0 +1,40 @@
+ສ້າງ Database Table (Model)
+
+	- Store: ເອົາໄວ້ເກັບລາຍການສິນຄ້າ
+        - name: ຊື່ສິນຄ້າ
+        - image: ຮູບພາບ
+        - amount: ຈຳນວນ
+        - price_buy: ລາຄາຊື້
+        - price_sell: ລາຄາຂາຍ
+
+	- Transection: ເອົາໄວ້ເກັນ ການເຄື່ອນໄຫວທຸລະກຳ(ເພີ່ມສິນຄ້າ, ຂາຍສິນ...)
+        - tran_id: ລະຫັດ ການເຄື່ອນໄຫວ
+        - product_id: ລະຫັດສິນຄ້າ
+        - tran_type: ປະເພດທຸລະກຳ (ລາຍຮັບ-ລາຍຈ່າຍ)
+        - amount: ຈຳນວນ
+        - price: ລາຄາ
+        - tran_detail: ລາຍລະອຽດທຸລະກຳ
+
+	- User: ເອົາໄວ້ເກັບ ຂໍ້ມູນຜູ້ໃຊ້
+        - name: ຊື່ຜູ້ໃຊ້
+        - email: ອີເມວລ໌
+        - password: ລະຫັດຜ່ານ
+
+	- Bills: ເອົາໄວ້ເກັບ ຂໍ້ມູນໃບບິນ
+        - bill_id: ລະຫັດບິນ
+        - customer_name: ຊື່ລູກຄ້າ
+        - customer_tel: ເບີໂທລູກຄ້າ
+
+	- BillsList: ເອົາໄວ້ເກັບ ລາຍການໃບບິນ
+        - bill_id: ລະຫັດໃບບິນ
+        - name: ຊື່ລາຍການໃບບິນ
+        - amount: ຈຳນວນ
+        - price: ລາຄາສິນຄ້າ
+
+ສ້າງ Controller ເພື່ອຈັດການ ຄຳນວນ, ເພີ່ມ, ແກ້ໄຂ, ອັບເດດ, ລຶບ
+
+    - BillsCotroller: ເອົາໄວ້ຈັດການຂໍ້ມູນ ກ່ຽວກັບໃບບິນ
+    - StoreController: ເອົາໄວ້ຈັດການ ກັບຂໍ້ມູນສິນຄ້າ
+    - TransectionController: ເອົາໄວ້ຈັດການ ການເຄື່ອນໄຫວທຸລະກຳ
+    - UserController: ເອົາໄວ້ຈັດການ ຂໍ້ມູນຜູ້ໃຊ້
+    - ReportController: ເອົາໄວ້ຈັດການ ຂໍ້ມູນລາຍງານ

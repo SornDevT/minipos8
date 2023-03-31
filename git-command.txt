@@ -1,6 +1,6 @@
 
 1. ເພີ່ມໄຟລ໌ເຂົ້າໄປໃນ git
-git add "ຊື່ໄຟລ໌" // git add .*
+git add "ຊື່ໄຟລ໌" // git add .
 
 2. ການ commit 
 git commit -m "ຂໍ້ຄວາມຕາມທີ່ຕ້ອງການ" 
