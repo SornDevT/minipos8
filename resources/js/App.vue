@@ -6,7 +6,7 @@
 
 <!-- Menu -->
 
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" v-if="check_login">
 
   
   <div class="app-brand demo ">
@@ -106,7 +106,7 @@
 
 
 
-<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar" v-if="check_login">
   
 
   
@@ -203,7 +203,7 @@
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="auth-login-basic.html">
+                <a class="dropdown-item" href="javascript:void(0)" @click="logout()">
                   <i class="bx bx-power-off me-2"></i>
                   <span class="align-middle">Log Out</span>
                 </a>
@@ -244,7 +244,7 @@
           
 
 <!-- Footer -->
-<footer class="content-footer footer bg-footer-theme">
+<footer class="content-footer footer bg-footer-theme" v-if="check_login">
   <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
     <div class="mb-2 mb-md-0">
       © 
@@ -292,7 +292,7 @@ export default {
 
     data() {
         return {
-            
+            check_login:false
         };
     },
 
@@ -301,8 +301,27 @@ export default {
     },
 
     methods: {
-        
+        logout(){
+            this.$axios.post('api/logout').then((response) => {
+              if(response.data.success){
+                this.$storage.setStorageSync("vue-isLoggin",false)
+                window.location.href = window.location.href.replace(/#.*$/,'')
+              }
+            }).catch((error) => {
+              console.log(error)
+            });
+        }
     },
+    created(){
+
+      // console.log(window.Laravel.isLoggin)
+
+        if(window.Laravel.isLoggin){
+            this.check_login = true
+        } else {
+          this.check_login = false
+        }
+    }
 };
 </script>
 

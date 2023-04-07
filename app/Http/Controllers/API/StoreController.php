@@ -12,10 +12,21 @@ class StoreController extends Controller
 
     public function index(){
 
-        $store = Store::orderBy('id','desc')
-        ->get();
+        $search = \Request::get('s');
 
-        return $store;
+        // $store = Store::orderBy('id','desc')
+        // ->where('name','LIKE',"%{$search}%")
+        // ->get();
+
+        // return $store;
+
+
+        $store = Store::orderBy('id','desc')
+        ->where('name','LIKE',"%{$search}%")
+        ->paginate(5)
+        ->toArray();
+
+        return array_reverse($store);
     }
 
     public function add(Request $request){
@@ -24,12 +35,35 @@ class StoreController extends Controller
 
             //return $request;
 
-            $store = new Store(); 
-            $store->name = $request->name;
-            $store->amount = $request->amount;
-            $store->price_buy = $request->price_buy;
-            $store->price_sell = $request->price_sell;
-            $store->save();
+            if($request->file('file')){
+
+                $upload_path = "assets/img";
+                $generate_new_name = time().'.'.$request->file->getClientOriginalExtension();
+                $request->file->move(public_path($upload_path),$generate_new_name);
+
+
+                $store = new Store(); 
+                $store->name = $request->name;
+                $store->image = $generate_new_name;
+                $store->amount = $request->amount;
+                $store->price_buy = $request->price_buy;
+                $store->price_sell = $request->price_sell;
+                $store->save();
+
+
+            } else {
+
+
+                $store = new Store(); 
+                $store->name = $request->name;
+                $store->amount = $request->amount;
+                $store->price_buy = $request->price_buy;
+                $store->price_sell = $request->price_sell;
+                $store->save();
+
+            }
+
+            
 
             $success = true;
             $message = "ບັນທຶກຂໍ້ມູນສຳເລັດ!";
