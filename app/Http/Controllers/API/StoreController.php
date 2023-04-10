@@ -23,7 +23,7 @@ class StoreController extends Controller
 
         $store = Store::orderBy('id','desc')
         ->where('name','LIKE',"%{$search}%")
-        ->paginate(5)
+        ->paginate(15)
         ->toArray();
 
         return array_reverse($store);
@@ -95,6 +95,62 @@ class StoreController extends Controller
         try{
 
             $store = Store::find($id);
+            $upload_path = "assets/img";
+            // ກວດຊອບວົ່າຮູບໄດ້ອັບໂຫຼດມາຫຼືບໍ່
+            if($request->file('file')){
+
+                // ລຶບຮູບພາບເກົ່າ
+                if($store->image){
+                    if(file_exists($upload_path.'/'.$store->image)){
+                        unlink($upload_path.'/'.$store->image);
+                    }
+                }
+
+                $generate_new_name = time().'.'.$request->file->getClientOriginalExtension();
+                $request->file->move(public_path($upload_path),$generate_new_name);
+
+                $store->update([
+                    'name'=> $request->name,
+                    'image'=> $generate_new_name,
+                    'amount'=> $request->amount,
+                    'price_buy'=> $request->price_buy,
+                    'price_sell'=> $request->price_sell,
+                ]);
+
+            } else {
+
+                if($request->file){
+
+                    $store->update([
+                        'name'=> $request->name,
+                        // 'image'=> $generate_new_name,
+                        'amount'=> $request->amount,
+                        'price_buy'=> $request->price_buy,
+                        'price_sell'=> $request->price_sell,
+                    ]);
+
+                } else {
+
+                    // ລຶບຮູບພາບເກົ່າ
+                    if($store->image){
+                        if(file_exists($upload_path.'/'.$store->image)){
+                            unlink($upload_path.'/'.$store->image);
+                        }
+                    }
+                    /// ອັບເດດຂໍ້ມູນ
+                    $store->update([
+                        'name'=> $request->name,
+                        'image'=> '',
+                        'amount'=> $request->amount,
+                        'price_buy'=> $request->price_buy,
+                        'price_sell'=> $request->price_sell,
+                    ]);
+
+
+
+                }
+
+            }
 
             $store->update([
                 'name'=> $request->name,

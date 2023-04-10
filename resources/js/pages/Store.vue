@@ -13,7 +13,12 @@
       <!-- <button @click="showAlert">Hello world</button> -->
     <div class="row" v-if="FormShow">
             
-            <div class="col-md-4 text-center">
+            <div class="col-md-4 text-center" style="position: relative;"> 
+              <div style="position: absolute;top: 0px;right: 10px;">
+                <button type="button" class="btn rounded-pill btn-icon btn-danger fs-4" @click="remove_img()">
+                <i class='bx bx-x-circle'></i>
+              </button>
+              </div>
               <img :src="imagePreview" style="width:80%" alt="" srcset="">
               <input type="file" class="form-control mt-2" @change="onSelected">
             </div>
@@ -47,18 +52,21 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>#</th>
-            <th>ຮູບ</th>
+            <th width="60">#</th>
+            <th width="120">ຮູບ</th>
             <th>ຊື່ສິນຄ້າ</th>
-            <th>ຈຳນວນ</th>
-            <th>ລາຄາຊື້</th>
+            <th width="80">ຈຳນວນ</th>
+            <th width="140">ລາຄາຊື້</th>
             <th width="80" class=" text-center">ຈັດການ</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="list in StoreData.data" :key="list.id">
             <td> {{ list.id }} </td>
-            <td></td>
+            <td> 
+              <img :src="'assets/img/'+list.image" v-if="list.image" class="img-cover" alt="">
+              <img :src="'assets/img/no-image.png'" v-if="!list.image" class="img-cover" alt="">
+               </td>
             <td>{{ list.name }}</td>
             <td>{{ formatPrice(list.amount) }}</td>
             <td> {{ formatPrice(list.price_buy) }} </td>
@@ -141,7 +149,10 @@ export default {
       //     timer: 2500
       //   })
       // },
-
+      remove_img(){
+          this.image_Product = ''
+          this.imagePreview = window.location.origin+'/assets/img/no-image.png'
+      },
       onSelected(event){
 
          this.image_Product = event.target.files[0]
@@ -298,6 +309,14 @@ export default {
                   this.FormStore.price_buy = response.data.price_buy;
                   this.FormStore.price_sell = response.data.price_sell;
 
+                  this.image_Product = response.data.image;
+
+                  if(response.data.image){
+                    this.imagePreview = window.location.origin+'/assets/img/'+response.data.image
+                  } else {
+                    this.imagePreview = window.location.origin+'/assets/img/no-image.png'
+                  }
+
 
               }).catch((error)=>{
                 console.log(error);
@@ -351,12 +370,16 @@ export default {
 
         },
         getStore(page){
-
           this.$axios.get("/sanctum/csrf-cookie").then((response)=>{
               this.$axios.get(`api/store?page=${page}&s=${this.Search}`).then((response)=>{
                   this.StoreData = response.data;
               }).catch((error)=>{
                 console.log(error)
+                // console.log(error.response.status)
+                if(error.response.status==401){
+                   this.$storage.setStorageSync("vue-isLoggin",false)
+                  window.location.reload()
+                }
               })
            })
 
@@ -375,6 +398,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-
+<style  scoped>
+    .img-cover{
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      object-position: center;
+    }
 </style>
