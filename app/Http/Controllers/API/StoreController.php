@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Store;
+use App\Models\Transection;
 
 class StoreController extends Controller
 {
@@ -50,6 +51,8 @@ class StoreController extends Controller
                 $store->price_sell = $request->price_sell;
                 $store->save();
 
+                $product_id = $store->id;
+
 
             } else {
 
@@ -61,7 +64,48 @@ class StoreController extends Controller
                 $store->price_sell = $request->price_sell;
                 $store->save();
 
+                $product_id = $store->id;
+
             }
+
+
+            /// ບັນທຶກລາຍຈ່າຍສັ່ງຊື້ສິນຄ້າ
+
+            $number = '';
+            $tran = Transection::all()->sortByDesc('id')->take(1)->toArray();
+
+            foreach($tran as $new){
+                $number = $new["tran_id"]; // INC0001
+            }
+            // ຕົວຢ່າງ INC00001
+            if($number !=''){
+                $number1 = str_replace("INC","",$number); // 00001
+                $number2 = str_replace("EXP","",$number1);
+                $number3 = (int)$number2+1; // 1+1 = 2
+                $length = 5;
+                $number = substr(str_repeat(0,$length).$number3, - $length); //00002
+            } else {
+                $number = 1;
+                $length = 5;
+                $number = substr(str_repeat(0,$length).$number, - $length); //00001
+            }
+
+            // ກວດຊອບປະເພດທຸລະກຳ
+            if($request->acc_type == "income") {
+                $tnum = "INC"; //INC
+            } elseif($request->acc_type == "expense") {
+                $tnum = "EXP"; // EXP
+            }
+
+
+            $resault = New Transection();
+            $resault->tran_id = $tnum.$number; // INC00001, EXP00002
+            $resault->product_id = $product_id;
+            $resault->tran_type = $request->acc_type;
+            $resault->amount = $request->amount;
+            $resault->price = $request->amount*$request->price_buy;
+            $resault->tran_detail = 'ສັ່ງຊື້ສິນຄ້າ '.$request->name;
+            $resault->save();
 
             
 
