@@ -1,4 +1,5 @@
 <template>
+  <grapdashboard />
    <div class="card">
     <div class="d-flex justify-content-between">
         <h5 class="card-header">ລາຍການສະຕ໋ອກສິນຄ້າ</h5>

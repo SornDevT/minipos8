@@ -7,6 +7,7 @@ use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TransectionController;
 use App\Http\Controllers\API\BillsController;
+use App\Http\Controllers\API\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +43,12 @@ Route::group(['prefix'=>'transection','middleware'=>'auth:sanctum'], function(){
     Route::post("/", [TransectionController::class,"index"]);
     // Route::get("edit/{id}", [TransectionController::class,"edit"]);
     // Route::post("update/{id}", [TransectionController::class,"update"]);
-    // Route::delete("delete/{id}", [TransectionController::class,"detele"]);
+    // Route::delete("delete/{id}", [TransectionController::class,"detele"]); 
+});
+
+Route::group(['prefix'=>'report','middleware'=>'auth:sanctum'], function(){
+    Route::post("/", [ReportController::class,"created_report"]);
+    Route::get("/grapdashboard", [ReportController::class,"GetDataDashboard"]);
 });
 
 
